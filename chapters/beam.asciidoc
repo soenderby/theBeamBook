@@ -491,13 +491,13 @@ in this code:
 -------------------------------------------
 
 This code first saves the return value of the function call (`x0`) in a
-new register (`x1`). Then it moves the caller saves register (`y0`) to
+new register (`x1`). Then it moves the caller saved register (`y0`) to
 the first argument register (`x0`). Finally it moves the saved value in
-x1 to the caller save register (`y0`) so that it will survive the next
+x1 to the caller saved register (`y0`) so that it will survive the next
 function call.
 
-Imagine that we would implement three instruction in BEAM called
-+move_xx+, +move_yx+, and +move_xy+ (These instructions does not exist
+Imagine that we would implement three instructions in BEAM called
++move_xx+, +move_yx+, and +move_xy+ (These instructions do not exist
 in the BEAM we just use them to illustrate this example):
 
 [source, C]
