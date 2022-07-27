@@ -31,7 +31,7 @@ BEAMHeader = <<
 
 ----
 
-After the header multiple chunks can be found. Size of each chunk is aligned to the multiple of 4 and each chunk has its own header (below).
+After the header multiple chunks can be found. The size of each chunk is aligned to a multiple of 4 and each chunk has its own header (shown below).
 
 NOTE: The alignment is important for some platforms, where unaligned memory byte access would create a hardware exception (named SIGBUS in Linux). This can turn out to be a performance hit or the exception could crash the VM.
 
@@ -46,7 +46,7 @@ BEAMChunk = <<
 
 ----
 
-This file format prepends all areas with the size of the following area making it easy to parse the file directly while reading it from disk. To illustrate the structure and content of beam files, we will write a small program that extract all the chunks from a beam file. To make this program as simple and readable as possible we will not parse the file while reading, instead we load the whole file in memory as a binary, and then parse each chunk. The first step is to get a list of all chunks:
+This file format prepends all areas with the size of the following area making it easy to parse the file directly while reading it from disk. To illustrate the structure and content of beam files, we will write a small program that extracts all the chunks from a beam file. To make this program as simple and readable as possible we will not parse the file while reading, instead we load the whole file in memory as a binary, and then parse each chunk. The first step is to get a list of all chunks:
 
 ++++
 <!-- While this is reasonably simple code, is it going to be obvious to readers what's going on here? It may require a bit of explanation as to how this code works. - bmacdonald -->
@@ -58,6 +58,8 @@ This file format prepends all areas with the size of the following area making i
 include::../code/beam_modules_chapter/src/beamfile1.erl[]
 ----
 
+The read/1 function parses the header using the erlang bit syntax. As we can see, the header has the layout described above. Following the header is a number of chunks which are parsed by the read_chunks/2 function. 
+This is a recursive function which uses bit syntax to get the name and size of the first chunk. The remaining information, which is both the content of the current chunk and the remaining chunks, is contained in the tail. The size is used to determine the length of the chunk, which is the size aligned by 4 as described above. The length is in turn used to extract the content of the chunk. The name, size, and content of the chunk is added to the accumulator in the tail call.
 
 A sample run might look like: 
 
@@ -228,7 +230,7 @@ Instruction = <<
 >>
 ----
 
-Here `Arity` is hardcoded in the table, which is generated from ops.tab by genop script when the emulator is built from source.
+Here `Arity` is hardcoded in the table, which is generated from ops.tab by a genop script when the emulator is built from source.
 
 The encoding produced by `beam_asm:encode` is explained below in the  <<SEC-BeamModulesCTE,Compact Term Encoding>> section.
 
